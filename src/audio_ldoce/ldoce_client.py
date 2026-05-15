@@ -8,15 +8,18 @@ from pathlib import Path
 from typing import Generator
 from urllib.parse import urlparse
 
+ROOT = Path(__file__).parent
 VENDOR_PATH = Path(__file__).parent / "vendor"
 
 if not VENDOR_PATH.exists():
     subprocess.run(
-        [sys.executable, "-m", "pip", "install", "requests", "-t", "vendor/"]
+        [sys.executable, "-m", "pip", "install", "requests", "-t", "vendor/"],
+        cwd=ROOT.as_posix(),
     )
 
     subprocess.run(
-        [sys.executable, "-m", "pip", "install", "beautifulsoup4", "-t", "vendor/"]
+        [sys.executable, "-m", "pip", "install", "beautifulsoup4", "-t", "vendor/"],
+        cwd=ROOT.as_posix(),
     )
 
 if VENDOR_PATH.as_posix() not in sys.path:
