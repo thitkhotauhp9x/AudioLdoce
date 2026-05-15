@@ -1,6 +1,7 @@
 import contextlib
 import importlib
 import os
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -9,7 +10,16 @@ from urllib.parse import urlparse
 
 VENDOR_PATH = Path(__file__).parent / "vendor"
 
-if VENDOR_PATH not in sys.path:
+if not VENDOR_PATH.exists():
+    subprocess.run(
+        [sys.executable, "-m", "pip", "install", "requests", "-t", "vendor/"]
+    )
+
+    subprocess.run(
+        [sys.executable, "-m", "pip", "install", "beautifulsoup4", "-t", "vendor/"]
+    )
+
+if VENDOR_PATH.as_posix() not in sys.path:
     sys.path.insert(0, VENDOR_PATH.as_posix())
 
 requests = importlib.import_module("requests")
