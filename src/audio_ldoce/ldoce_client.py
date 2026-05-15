@@ -7,11 +7,11 @@ from pathlib import Path
 from typing import Generator
 from urllib.parse import urlparse
 
-addon_dir = os.path.dirname(__file__)
-vendor_path = os.path.join(addon_dir, "vendor")
+VENDOR_PATH = Path(__file__).parent / "vendor"
 
-if vendor_path not in sys.path:
-    sys.path.insert(0, vendor_path)
+if VENDOR_PATH not in sys.path:
+    sys.path.insert(0, VENDOR_PATH.as_posix())
+
 requests = importlib.import_module("requests")
 bs4 = importlib.import_module("bs4")
 
