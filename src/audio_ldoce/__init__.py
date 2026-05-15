@@ -1,77 +1,10 @@
 from aqt import mw
-from aqt.qt import *
+from aqt.qt import QAction, QInputDialog
 from aqt.utils import showInfo
 
 from anki.notes import Note
 
-import urllib.request
-import urllib.error
-import re
-
-import os
-
 from .ldoce_client import LDOCEClient
-
-
-# =========================
-# HELPER: FETCH HTML
-# =========================
-def fetch_html(url: str):
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=10) as res:
-            return res.read().decode("utf-8", errors="ignore")
-    except urllib.error.URLError:
-        return None
-
-
-# =========================
-# 1. TÌM AUDIO TỪ LDOCE
-# =========================
-def get_audio_url(word: str):
-    url = f"https://www.ldoceonline.com/dictionary/{word}"
-
-    html = fetch_html(url)
-    if not html:
-        return None
-
-    match = re.search(
-        r'https://www\.ldoceonline\.com/media/english/(?:exaProns|pron)/[^"]+\.mp3',
-        html,
-    )
-
-    if match:
-        return match.group(0)
-
-    return None
-
-
-# =========================
-# 2. DOWNLOAD AUDIO
-# =========================
-def download_audio(url: str):
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=10) as res:
-            data = res.read()
-    except urllib.error.URLError:
-        return None
-
-    filename = url.split("/")[-1].split("?")[0]
-
-    media_dir = mw.col.media.dir()
-    path = os.path.join(media_dir, filename)
-
-    # tránh overwrite
-    if os.path.exists(path):
-        base, ext = os.path.splitext(filename)
-        filename = f"{base}_1{ext}"
-        path = os.path.join(media_dir, filename)
-
-    with open(path, "wb") as f:
-        f.write(data)
-
-    return filename
 
 
 def get_or_create_model():
@@ -115,6 +48,7 @@ def get_or_create_model():
 
     return model
 
+
 # =========================
 # 3. TẠO CARD
 # =========================
@@ -132,6 +66,7 @@ def create_card(word: str, audio_filename: str):
 
     col.add_note(note, deck_id)
     mw.reset()
+
 
 # =========================
 # 4. MAIN FLOW
@@ -157,9 +92,12 @@ def add_word_with_audio():
                 create_card(text, filename)
                 pass
 
-# =========================
-# 5. MENU
-# =========================
-action = QAction("Add Word (LDOCE Audio)", mw)
-action.triggered.connect(add_word_with_audio)
-mw.form.menuTools.addAction(action)
+
+def main():
+    action = QAction("Add Word (LDOCE Audio)", mw)
+    action.triggered.connect(add_word_with_audio)
+    mw.form.menuTools.addAction(action)
+
+
+if __name__ == "__main__":
+    main()

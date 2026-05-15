@@ -46,7 +46,6 @@ class LDOCEClient:
 
         return results
 
-
     @contextlib.contextmanager
     def download_audio(self, url: str) -> Generator[Path, None, None]:
         parsed = urlparse(url)

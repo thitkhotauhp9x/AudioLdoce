@@ -8,6 +8,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "aqt[qt6] (>=25.9.4,<26.0.0)"
 ]
 
 [tool.poetry]
@@ -16,3 +17,11 @@ packages = [{include = "audio_ldoce", from = "src"}]
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "ruff (>=0.15.13,<0.16.0)",
+    "mypy (>=2.1.0,<3.0.0)",
+    "pylint (>=4.0.5,<5.0.0)",
+    "pyright (>=1.1.409,<2.0.0)"
+]
