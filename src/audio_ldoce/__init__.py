@@ -49,9 +49,6 @@ def get_or_create_model():
     return model
 
 
-# =========================
-# 3. TẠO CARD
-# =========================
 def create_card(word: str, audio_filename: str):
     col = mw.col
 
@@ -62,15 +59,11 @@ def create_card(word: str, audio_filename: str):
     note["Audio"] = f"[sound:{audio_filename}]"
 
     deck_id = col.decks.current()["id"]
-    # note.model()["did"] = deck_id
 
     col.add_note(note, deck_id)
     mw.reset()
 
 
-# =========================
-# 4. MAIN FLOW
-# =========================
 def add_word_with_audio():
     word, ok = QInputDialog.getText(None, "Nhập từ", "Word:")
 
